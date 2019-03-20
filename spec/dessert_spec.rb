@@ -7,11 +7,11 @@ Instructions: implement all of the pending specs (the `it` statements without bl
 
 describe Dessert do
   let(:chef) { double("chef") }
-  let (:brownie) { Dessert.new("brownie", 50)}
+  let (:brownie) { Dessert.new("brownie", 50, chef)}
 
   describe '#initialize' do
     it "sets a type" do 
-    expect (brownie.type).to eq ("brownie")
+    expect(brownie.type).to eq("brownie")
     end 
 
     it "sets a quantity" do 
@@ -23,7 +23,7 @@ describe Dessert do
     end 
 
     it "raises an argument error when given a non-integer quantity" do 
-      expect { Dessert.new('brownie', 'amount', chef)}.to raise_error
+      expect { Dessert.new('cookie', 'amount', chef)}.to raise_error(ArgumentError)
     end 
   end
 
@@ -38,13 +38,29 @@ describe Dessert do
     it "shuffles the ingredient array" do 
     ingredients = ['eggs', 'milk', 'sugar', 'butter']
 
+      ingredients.each do |ingredient|
+        brownie.add_ingredient(ingredient)
+      end 
+
+      expect(brownie.ingredients).to eq(ingredients)
+      brownie.mix!
+      expect(brownie.ingredients).not_to eq(ingredients)
+      expect(brownie.ingredients.sort).to eq(ingredients.sort)
+    end 
+        
 
   end
 
   describe "#eat" do
-    it "subtracts an amount from the quantity"
+    it "subtracts an amount from the quantity" do 
+      brownie.eat(20)
+      expect(brownie.quantity).to eq(30)
+    end 
+   
 
-    it "raises an error if the amount is greater than the quantity"
+    it "raises an error if the amount is greater than the quantity" do 
+      exepect { brownie.eat(200)}.to raise_error("not enough left")
+    end
   end
 
   describe "#serve" do
